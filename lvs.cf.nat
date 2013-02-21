@@ -1,0 +1,40 @@
+serial_no = 30
+primary = 192.168.26.9
+service = lvs
+backup_active = 0
+backup = 0.0.0.0
+heartbeat = 1
+heartbeat_port = 539
+keepalive = 2
+deadtime = 4
+network = nat
+nat_router =  10.11.12.10 eth1:1
+nat_nmask = 255.255.255.255
+debug_level = NONE
+monitor_links = 1
+syncdaemon = 0
+virtual HTTP {
+	active = 1
+	address = 192.168.26.10 eth0:1
+	vip_nmask = 255.255.255.0
+	port = 80
+	send = "GET / HTTP/1.0\r\n\r\n"
+	expect = "HTTP"
+	use_regex = 0
+	load_monitor = none
+	scheduler = rr
+	protocol = tcp
+	timeout = 6
+	reentry = 15
+	quiesce_server = 0
+	server real1 {
+		address = 10.11.12.1
+		active = 1
+		weight = 1
+	}
+	server real2 {
+		address = 10.11.12.2
+		active = 1
+		weight = 1
+	}
+}
